@@ -31,43 +31,39 @@ public interface UserService extends IService<User> {
      *
      * @param userAccount  用户账户
      * @param userPassword 用户密码
-     * @param request      请求
      * @return 脱敏后的用户信息
      */
-    LoginUserVO userLogin(String userAccount, String userPassword, HttpServletRequest request);
+    LoginUserVO userLogin(String userAccount, String userPassword);
 
     /**
+     * 用户通过 MP Open 登录
      * 用户登录（微信开放平台）
      *
      * @param wxOauth2UserInfo 从微信获取的用户信息
-     * @param request          请求
      * @return 脱敏后的用户信息
      */
-    LoginUserVO userLoginByMpOpen(WxOAuth2UserInfo wxOauth2UserInfo, HttpServletRequest request);
+    LoginUserVO userLoginByMpOpen(WxOAuth2UserInfo wxOauth2UserInfo);
 
     /**
      * 获取当前登录用户
      *
-     * @param request 请求
      * @return {@link User}
      */
-    User getLoginUser(HttpServletRequest request);
+    User getLoginUser();
 
     /**
      * 获取当前登录用户（允许未登录）
      *
-     * @param request 请求
      * @return {@link User}
      */
-    User getLoginUserPermitNull(HttpServletRequest request);
+    User getLoginUserPermitNull();
 
     /**
      * 是否为管理员
      *
-     * @param request 请求
      * @return boolean
      */
-    boolean isAdmin(HttpServletRequest request);
+    boolean isAdmin();
 
     /**
      * 是否为管理员

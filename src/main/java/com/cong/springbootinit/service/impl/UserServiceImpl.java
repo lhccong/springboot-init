@@ -1,18 +1,22 @@
 package com.cong.springbootinit.service.impl;
 
-import static com.cong.springbootinit.constant.UserConstant.USER_LOGIN_STATE;
+import static com.cong.springbootinit.constant.SystemConstants.SALT;
 
+import cn.dev33.satoken.stp.SaTokenInfo;
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cong.springbootinit.common.ErrorCode;
 import com.cong.springbootinit.constant.CommonConstant;
+import com.cong.springbootinit.constant.SystemConstants;
 import com.cong.springbootinit.exception.BusinessException;
 import com.cong.springbootinit.mapper.UserMapper;
 import com.cong.springbootinit.model.dto.user.UserQueryRequest;
 import com.cong.springbootinit.model.entity.User;
 import com.cong.springbootinit.model.enums.UserRoleEnum;
 import com.cong.springbootinit.model.vo.LoginUserVO;
+import com.cong.springbootinit.model.vo.TokenLoginUserVo;
 import com.cong.springbootinit.model.vo.UserVO;
 import com.cong.springbootinit.service.UserService;
 import com.cong.springbootinit.utils.SqlUtils;
@@ -35,10 +39,6 @@ import org.springframework.util.DigestUtils;
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
-    /**
-     * 盐值，混淆密码
-     */
-    public static final String SALT = "cong";
 
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword) {
@@ -79,7 +79,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public LoginUserVO userLogin(String userAccount, String userPassword, HttpServletRequest request) {
+    public TokenLoginUserVo userLogin(String userAccount, String userPassword) {
         // 1. 校验
         if (StringUtils.isAnyBlank(userAccount, userPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
@@ -103,12 +103,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码错误");
         }
         // 3. 记录用户的登录态
-        request.getSession().setAttribute(USER_LOGIN_STATE, user);
-        return this.getLoginUserVO(user);
+        // 3. 记录用户的登录态
+        StpUtil.login(user.getId());
+        StpUtil.getTokenSession().set(SystemConstants.USER_LOGIN_STATE, user);
+        return this.getTokenLoginUserVO(user);
     }
-
+    public TokenLoginUserVo getTokenLoginUserVO(User user) {
+        if (user == null) {
+            return null;
+        }
+        TokenLoginUserVo loginUserVO = new TokenLoginUserVo();
+        BeanUtils.copyProperties(user, loginUserVO);
+        //获取 Token  相关参数
+        SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
+        loginUserVO.setSaTokenInfo(tokenInfo);
+        return loginUserVO;
+    }
     @Override
-    public LoginUserVO userLoginByMpOpen(WxOAuth2UserInfo wxOAuth2UserInfo, HttpServletRequest request) {
+    public LoginUserVO userLoginByMpOpen(WxOAuth2UserInfo wxOAuth2UserInfo) {
         String unionId = wxOAuth2UserInfo.getUnionId();
         String mpOpenId = wxOAuth2UserInfo.getOpenid();
         // 单机锁
@@ -134,7 +146,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 }
             }
             // 记录用户的登录态
-            request.getSession().setAttribute(USER_LOGIN_STATE, user);
+            StpUtil.getTokenSession().set(SystemConstants.USER_LOGIN_STATE, user);
             return getLoginUserVO(user);
         }
     }
@@ -143,17 +155,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * 获取登录用户
      * 获取当前登录用户
      *
-     * @param request 请求
      * @return {@link User}
      */
     @Override
-    public User getLoginUser(HttpServletRequest request) {
-        // 先判断是否已登录
-        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
-        User currentUser = (User) userObj;
-        if (currentUser == null || currentUser.getId() == null) {
+    public User getLoginUser() {
+        if (!StpUtil.isLogin()) {
             throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
         }
+        // 先判断是否已登录
+        Object userObj = StpUtil.getTokenSession().get(SystemConstants.USER_LOGIN_STATE);
+        User currentUser = (User) userObj;
         // 从数据库查询（追求性能的话可以注释，直接走缓存）
         long userId = currentUser.getId();
         currentUser = this.getById(userId);
@@ -167,13 +178,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * 获取登录用户许可 null
      * 获取当前登录用户（允许未登录）
      *
-     * @param request 请求
      * @return {@link User}
      */
     @Override
-    public User getLoginUserPermitNull(HttpServletRequest request) {
+    public User getLoginUserPermitNull() {
         // 先判断是否已登录
-        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
+        Object userObj = StpUtil.getTokenSession().get(SystemConstants.USER_LOGIN_STATE);
         User currentUser = (User) userObj;
         if (currentUser == null || currentUser.getId() == null) {
             return null;
@@ -186,13 +196,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     /**
      * 是否为管理员
      *
-     * @param request 请求
      * @return boolean
      */
     @Override
-    public boolean isAdmin(HttpServletRequest request) {
+    public boolean isAdmin() {
         // 仅管理员可查询
-        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
+        Object userObj = StpUtil.getTokenSession().get(SystemConstants.USER_LOGIN_STATE);
         User user = (User) userObj;
         return isAdmin(user);
     }
@@ -210,11 +219,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public boolean userLogout(HttpServletRequest request) {
-        if (request.getSession().getAttribute(USER_LOGIN_STATE) == null) {
+        if (!StpUtil.isLogin() || StpUtil.getTokenSession().get(SystemConstants.USER_LOGIN_STATE) == null) {
             throw new BusinessException(ErrorCode.OPERATION_ERROR, "未登录");
         }
         // 移除登录态
-        request.getSession().removeAttribute(USER_LOGIN_STATE);
+        StpUtil.logout();
         return true;
     }
 

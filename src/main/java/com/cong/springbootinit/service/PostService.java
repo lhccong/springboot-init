@@ -43,17 +43,15 @@ public interface PostService extends IService<Post> {
      * 获取帖子封装
      *
      * @param post    发布
-     * @param request 请求
      * @return {@link PostVO}
      */
-    PostVO getPostVO(Post post, HttpServletRequest request);
+    PostVO getPostVO(Post post);
 
     /**
      * 分页获取帖子封装
      *
      * @param postPage 帖子页面
-     * @param request  请求
      * @return {@link Page}<{@link PostVO}>
      */
-    Page<PostVO> getPostVOPage(Page<Post> postPage, HttpServletRequest request);
+    Page<PostVO> getPostVOPage(Page<Post> postPage);
 }

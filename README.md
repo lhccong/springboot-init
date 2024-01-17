@@ -93,7 +93,7 @@ spring:
 
 ![](doc/swagger.png)
 
-### Redis 分布式登录
+### sa-token 分布式登录
 
 1）修改 `application.yml` 的 Redis 配置为你自己的：
 
@@ -106,29 +106,14 @@ spring:
     timeout: 5000
     password: 123456
 ```
-
-2）修改 `application.yml` 中的 session 存储方式：
-
+2)登录请求头携带token名称（名称可自定义）以及值（通过登录接口的TokenLoginUserVo获取返回值）
 ```yml
-spring:
-  session:
-    store-type: redis
+############### Sa-Token 配置 (文档: https://sa-token.cc) ##############
+sa-token:
+  # token 名称（同时也是 cookie 名称）
+  token-name: cong-sa-token
 ```
 
-3）移除 `MainApplication` 类开头 `@SpringBootApplication` 注解内的 exclude 参数：
-
-修改前：
-
-```java
-@SpringBootApplication(exclude = {RedisAutoConfiguration.class})
-```
-
-修改后：
-
-
-```java
-@SpringBootApplication
-```
 
 ### Elasticsearch 搜索引擎
 
