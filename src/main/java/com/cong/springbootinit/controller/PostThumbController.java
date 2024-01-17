@@ -10,6 +10,9 @@ import com.cong.springbootinit.service.PostThumbService;
 import com.cong.springbootinit.service.UserService;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,12 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 帖子点赞接口
- *
  * # @author <a href="https://github.com/lhccong">程序员聪</a>
  */
 @RestController
 @RequestMapping("/post_thumb")
 @Slf4j
+@Api(tags = "帖子点赞接口")
 public class PostThumbController {
 
     @Resource
@@ -35,11 +38,12 @@ public class PostThumbController {
     /**
      * 点赞 / 取消点赞
      *
-     * @param postThumbAddRequest
-     * @param request
+     * @param postThumbAddRequest 发布拇指添加请求
+     * @param request             请求
      * @return resultNum 本次点赞变化数
      */
     @PostMapping("/")
+    @ApiOperation(value = "点赞 / 取消点赞")
     public BaseResponse<Integer> doThumb(@RequestBody PostThumbAddRequest postThumbAddRequest,
             HttpServletRequest request) {
         if (postThumbAddRequest == null || postThumbAddRequest.getPostId() <= 0) {
