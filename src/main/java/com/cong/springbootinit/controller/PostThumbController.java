@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/post_thumb")
 @Slf4j
-@Api(tags = "帖子点赞接口")
+@Api(tags = "帖子点赞")
 public class PostThumbController {
 
     @Resource

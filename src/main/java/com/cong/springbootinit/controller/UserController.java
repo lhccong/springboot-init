@@ -47,7 +47,7 @@ import static com.cong.springbootinit.service.impl.UserServiceImpl.SALT;
 @RestController
 @RequestMapping("/user")
 @Slf4j
-@Api(tags = "用户接口")
+@Api(tags = "用户相关")
 public class UserController {
 
     @Resource

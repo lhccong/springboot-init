@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/")
 @Slf4j
-@Api("微信公众号相关接口")
+@Api(tags = "微信公众号相关")
 public class WxMpController {
 
     @Resource

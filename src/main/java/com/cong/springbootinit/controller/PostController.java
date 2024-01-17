@@ -40,7 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/post")
 @Slf4j
-@Api(tags = "帖子接口")
+@Api(tags = "帖子")
 public class PostController {
 
     @Resource

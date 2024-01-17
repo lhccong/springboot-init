@@ -15,6 +15,7 @@ import com.cong.springbootinit.model.vo.PostVO;
 import com.cong.springbootinit.service.PostFavourService;
 import com.cong.springbootinit.service.PostService;
 import com.cong.springbootinit.service.UserService;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -33,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/post_favour")
 @Slf4j
-@Api("帖子收藏接口")
+@Api(tags = "帖子收藏")
 public class PostFavourController {
 
     @Resource
@@ -55,7 +56,7 @@ public class PostFavourController {
     @PostMapping("/")
     @ApiOperation(value = "收藏 / 取消收藏")
     public BaseResponse<Integer> doPostFavour(@RequestBody PostFavourAddRequest postFavourAddRequest,
-            HttpServletRequest request) {
+                                              HttpServletRequest request) {
         if (postFavourAddRequest == null || postFavourAddRequest.getPostId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -76,7 +77,7 @@ public class PostFavourController {
     @PostMapping("/my/list/page")
     @ApiOperation(value = "获取我收藏的帖子列表")
     public BaseResponse<Page<PostVO>> listMyFavourPostByPage(@RequestBody PostQueryRequest postQueryRequest,
-            HttpServletRequest request) {
+                                                             HttpServletRequest request) {
         if (postQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -100,7 +101,7 @@ public class PostFavourController {
     @PostMapping("/list/page")
     @ApiOperation(value = "获取用户收藏的帖子列表")
     public BaseResponse<Page<PostVO>> listFavourPostByPage(@RequestBody PostFavourQueryRequest postFavourQueryRequest,
-            HttpServletRequest request) {
+                                                           HttpServletRequest request) {
         if (postFavourQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
