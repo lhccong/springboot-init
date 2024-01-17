@@ -17,6 +17,9 @@ import com.cong.springbootinit.service.PostService;
 import com.cong.springbootinit.service.UserService;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,12 +28,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 帖子收藏接口
- *
  * # @author <a href="https://github.com/lhccong">程序员聪</a>
  */
 @RestController
 @RequestMapping("/post_favour")
 @Slf4j
+@Api("帖子收藏接口")
 public class PostFavourController {
 
     @Resource
@@ -45,11 +48,12 @@ public class PostFavourController {
     /**
      * 收藏 / 取消收藏
      *
-     * @param postFavourAddRequest
-     * @param request
+     * @param postFavourAddRequest 发布收藏添加请求
+     * @param request              请求
      * @return resultNum 收藏变化数
      */
     @PostMapping("/")
+    @ApiOperation(value = "收藏 / 取消收藏")
     public BaseResponse<Integer> doPostFavour(@RequestBody PostFavourAddRequest postFavourAddRequest,
             HttpServletRequest request) {
         if (postFavourAddRequest == null || postFavourAddRequest.getPostId() <= 0) {
@@ -65,10 +69,12 @@ public class PostFavourController {
     /**
      * 获取我收藏的帖子列表
      *
-     * @param postQueryRequest
-     * @param request
+     * @param postQueryRequest 发布查询请求
+     * @param request          请求
+     * @return {@link BaseResponse}<{@link Page}<{@link PostVO}>>
      */
     @PostMapping("/my/list/page")
+    @ApiOperation(value = "获取我收藏的帖子列表")
     public BaseResponse<Page<PostVO>> listMyFavourPostByPage(@RequestBody PostQueryRequest postQueryRequest,
             HttpServletRequest request) {
         if (postQueryRequest == null) {
@@ -87,10 +93,12 @@ public class PostFavourController {
     /**
      * 获取用户收藏的帖子列表
      *
-     * @param postFavourQueryRequest
-     * @param request
+     * @param postFavourQueryRequest 发布优惠查询请求
+     * @param request                请求
+     * @return {@link BaseResponse}<{@link Page}<{@link PostVO}>>
      */
     @PostMapping("/list/page")
+    @ApiOperation(value = "获取用户收藏的帖子列表")
     public BaseResponse<Page<PostVO>> listFavourPostByPage(@RequestBody PostFavourQueryRequest postFavourQueryRequest,
             HttpServletRequest request) {
         if (postFavourQueryRequest == null) {
