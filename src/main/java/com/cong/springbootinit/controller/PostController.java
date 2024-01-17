@@ -159,11 +159,12 @@ public class PostController {
     /**
      * 分页获取列表（仅管理员）
      *
-     * @param postQueryRequest
-     * @return
+     * @param postQueryRequest 发布查询请求
+     * @return {@link BaseResponse}<{@link Page}<{@link Post}>>
      */
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @ApiOperation(value = "分页获取列表（仅管理员）")
     public BaseResponse<Page<Post>> listPostByPage(@RequestBody PostQueryRequest postQueryRequest) {
         long current = postQueryRequest.getCurrent();
         long size = postQueryRequest.getPageSize();
@@ -175,12 +176,13 @@ public class PostController {
     /**
      * 分页获取列表（封装类）
      *
-     * @param postQueryRequest
-     * @param request
-     * @return
+     * @param postQueryRequest 发布查询请求
+     * @param request          请求
+     * @return {@link BaseResponse}<{@link Page}<{@link PostVO}>>
      */
     @PostMapping("/list/page/vo")
-    public BaseResponse<Page<PostVO>> listPostVOByPage(@RequestBody PostQueryRequest postQueryRequest,
+    @ApiOperation(value = "分页获取列表（封装类）")
+    public BaseResponse<Page<PostVO>> listPostVoByPage(@RequestBody PostQueryRequest postQueryRequest,
             HttpServletRequest request) {
         long current = postQueryRequest.getCurrent();
         long size = postQueryRequest.getPageSize();
@@ -194,12 +196,13 @@ public class PostController {
     /**
      * 分页获取当前用户创建的资源列表
      *
-     * @param postQueryRequest
-     * @param request
-     * @return
+     * @param postQueryRequest 发布查询请求
+     * @param request          请求
+     * @return {@link BaseResponse}<{@link Page}<{@link PostVO}>>
      */
     @PostMapping("/my/list/page/vo")
-    public BaseResponse<Page<PostVO>> listMyPostVOByPage(@RequestBody PostQueryRequest postQueryRequest,
+    @ApiOperation(value = "分页获取当前用户创建的资源列表")
+    public BaseResponse<Page<PostVO>> listMyPostVoByPage(@RequestBody PostQueryRequest postQueryRequest,
             HttpServletRequest request) {
         if (postQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -220,12 +223,13 @@ public class PostController {
     /**
      * 分页搜索（从 ES 查询，封装类）
      *
-     * @param postQueryRequest
-     * @param request
-     * @return
+     * @param postQueryRequest 发布查询请求
+     * @param request          请求
+     * @return {@link BaseResponse}<{@link Page}<{@link PostVO}>>
      */
     @PostMapping("/search/page/vo")
-    public BaseResponse<Page<PostVO>> searchPostVOByPage(@RequestBody PostQueryRequest postQueryRequest,
+    @ApiOperation(value = "分页搜索（从 ES 查询，封装类）")
+    public BaseResponse<Page<PostVO>> searchPostVoByPage(@RequestBody PostQueryRequest postQueryRequest,
             HttpServletRequest request) {
         long size = postQueryRequest.getPageSize();
         // 限制爬虫
@@ -237,11 +241,12 @@ public class PostController {
     /**
      * 编辑（用户）
      *
-     * @param postEditRequest
-     * @param request
-     * @return
+     * @param postEditRequest 发布编辑请求
+     * @param request         请求
+     * @return {@link BaseResponse}<{@link Boolean}>
      */
     @PostMapping("/edit")
+    @ApiOperation(value = "编辑（用户）")
     public BaseResponse<Boolean> editPost(@RequestBody PostEditRequest postEditRequest, HttpServletRequest request) {
         if (postEditRequest == null || postEditRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
