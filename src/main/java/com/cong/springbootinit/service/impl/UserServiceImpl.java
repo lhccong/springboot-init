@@ -29,7 +29,6 @@ import org.springframework.util.DigestUtils;
 
 /**
  * 用户服务实现
- *
  * # @author <a href="https://github.com/lhccong">程序员聪</a>
  */
 @Service
@@ -141,10 +140,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     /**
+     * 获取登录用户
      * 获取当前登录用户
      *
-     * @param request
-     * @return
+     * @param request 请求
+     * @return {@link User}
      */
     @Override
     public User getLoginUser(HttpServletRequest request) {
@@ -164,10 +164,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     /**
+     * 获取登录用户许可 null
      * 获取当前登录用户（允许未登录）
      *
-     * @param request
-     * @return
+     * @param request 请求
+     * @return {@link User}
      */
     @Override
     public User getLoginUserPermitNull(HttpServletRequest request) {
