@@ -20,10 +20,11 @@ import com.cong.springbootinit.model.vo.TokenLoginUserVo;
 import com.cong.springbootinit.model.vo.UserVO;
 import com.cong.springbootinit.service.UserService;
 import com.cong.springbootinit.utils.SqlUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
+
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -108,6 +109,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         StpUtil.getTokenSession().set(SystemConstants.USER_LOGIN_STATE, user);
         return this.getTokenLoginUserVO(user);
     }
+
     public TokenLoginUserVo getTokenLoginUserVO(User user) {
         if (user == null) {
             return null;
@@ -119,6 +121,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         loginUserVO.setSaTokenInfo(tokenInfo);
         return loginUserVO;
     }
+
     @Override
     public LoginUserVO userLoginByMpOpen(WxOAuth2UserInfo wxOAuth2UserInfo) {
         String unionId = wxOAuth2UserInfo.getUnionId();
@@ -214,11 +217,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     /**
      * 用户注销
      *
-     * @param request 请求
      * @return boolean
      */
     @Override
-    public boolean userLogout(HttpServletRequest request) {
+    public boolean userLogout() {
         if (!StpUtil.isLogin() || StpUtil.getTokenSession().get(SystemConstants.USER_LOGIN_STATE) == null) {
             throw new BusinessException(ErrorCode.OPERATION_ERROR, "未登录");
         }
