@@ -47,7 +47,6 @@ public class FileController {
      *
      * @param multipartFile     multipart 文件
      * @param uploadFileRequest 上传文件请求
-     * @param request           请求
      * @return {@link BaseResponse}<{@link String}>
      */
     @PostMapping("/upload")
