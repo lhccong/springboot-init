@@ -18,6 +18,7 @@ import com.cong.springbootinit.model.dto.user.UserUpdateMyRequest;
 import com.cong.springbootinit.model.dto.user.UserUpdateRequest;
 import com.cong.springbootinit.model.entity.User;
 import com.cong.springbootinit.model.vo.LoginUserVO;
+import com.cong.springbootinit.model.vo.TokenLoginUserVo;
 import com.cong.springbootinit.model.vo.UserVO;
 import com.cong.springbootinit.service.UserService;
 
@@ -30,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 import me.chanjar.weixin.common.bean.oauth2.WxOAuth2AccessToken;
 import me.chanjar.weixin.mp.api.WxMpService;
+import me.zhyd.oauth.model.AuthCallback;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.DigestUtils;
@@ -124,6 +126,22 @@ public class UserController {
             log.error("userLoginByWxOpen error", e);
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "登录失败，系统错误");
         }
+    }
+
+    /**
+     * 用户通过 GitHub 登录
+     * @param callback 回调
+     * @return {@link BaseResponse}<{@link TokenLoginUserVo}>
+     */
+    @PostMapping("/login/github")
+    @ApiOperation(value = "用户GitHub登录")
+    public BaseResponse<TokenLoginUserVo> userLoginByGithub(AuthCallback callback) {
+        if (callback.getCode() == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR,"Github 登录失败，code 为空");
+        }
+        TokenLoginUserVo tokenLoginUserVo = userService.userLoginByGithub(callback);
+        return ResultUtils.success(tokenLoginUserVo);
+
     }
 
     /**
