@@ -19,7 +19,7 @@ public class CodeGenerator {
                 // 生成项目路径
                 .packageName("com.cong.springbootinit")
                 // 排除字段策略
-                .exclusionStrategy("serialVersionUID", "isDelete")
+                .exclusionStrategy("serialVersionUID", "isDelete","updateTime","createTime")
                 // 继续追加process(数据类.class, "数据别名")
                 .process(Post.class, "帖子")
                 .process(User.class, "用户");
