@@ -119,11 +119,10 @@ public class ${upperDataKey}ServiceImpl extends ServiceImpl<${upperDataKey}Mappe
      * 获取${dataName}封装
      *
      * @param ${dataKey}
-     * @param request
      * @return
      */
     @Override
-    public ${upperDataKey}VO get${upperDataKey}VO(${upperDataKey} ${dataKey}, HttpServletRequest request) {
+    public ${upperDataKey}VO get${upperDataKey}VO(${upperDataKey} ${dataKey}) {
         // 对象转封装类
         ${upperDataKey}VO ${dataKey}VO = ${upperDataKey}VO.objToVo(${dataKey});
 
@@ -139,7 +138,7 @@ public class ${upperDataKey}ServiceImpl extends ServiceImpl<${upperDataKey}Mappe
         ${dataKey}VO.setUser(userVO);
         // 2. 已登录，获取用户点赞、收藏状态
         long ${dataKey}Id = ${dataKey}.getId();
-        User loginUser = userService.getLoginUserPermitNull(request);
+        User loginUser = userService.getLoginUserPermitNull();
         if (loginUser != null) {
             // 获取点赞
             QueryWrapper<${upperDataKey}Thumb> ${dataKey}ThumbQueryWrapper = new QueryWrapper<>();
@@ -162,12 +161,11 @@ public class ${upperDataKey}ServiceImpl extends ServiceImpl<${upperDataKey}Mappe
     /**
      * 分页获取${dataName}封装
      *
-     * @param ${dataKey}Page
-     * @param request
-     * @return
+     * @param ${dataKey}Page 分页对象
+     * @return 分页对象
      */
     @Override
-    public Page<${upperDataKey}VO> get${upperDataKey}VOPage(Page<${upperDataKey}> ${dataKey}Page, HttpServletRequest request) {
+    public Page<${upperDataKey}VO> get${upperDataKey}VOPage(Page<${upperDataKey}> ${dataKey}Page) {
         List<${upperDataKey}> ${dataKey}List = ${dataKey}Page.getRecords();
         Page<${upperDataKey}VO> ${dataKey}VOPage = new Page<>(${dataKey}Page.getCurrent(), ${dataKey}Page.getSize(), ${dataKey}Page.getTotal());
         if (CollUtil.isEmpty(${dataKey}List)) {
@@ -187,10 +185,10 @@ public class ${upperDataKey}ServiceImpl extends ServiceImpl<${upperDataKey}Mappe
         // 2. 已登录，获取用户点赞、收藏状态
         Map<Long, Boolean> ${dataKey}IdHasThumbMap = new HashMap<>();
         Map<Long, Boolean> ${dataKey}IdHasFavourMap = new HashMap<>();
-        User loginUser = userService.getLoginUserPermitNull(request);
+        User loginUser = userService.getLoginUserPermitNull();
         if (loginUser != null) {
             Set<Long> ${dataKey}IdSet = ${dataKey}List.stream().map(${upperDataKey}::getId).collect(Collectors.toSet());
-            loginUser = userService.getLoginUser(request);
+            loginUser = userService.getLoginUser();
             // 获取点赞
             QueryWrapper<${upperDataKey}Thumb> ${dataKey}ThumbQueryWrapper = new QueryWrapper<>();
             ${dataKey}ThumbQueryWrapper.in("${dataKey}Id", ${dataKey}IdSet);
