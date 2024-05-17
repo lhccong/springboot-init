@@ -5,12 +5,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.cong.springbootinit.model.dto.user.UserQueryRequest;
 import com.cong.springbootinit.model.entity.User;
 import com.cong.springbootinit.model.vo.LoginUserVO;
+import com.cong.springbootinit.model.vo.TokenLoginUserVo;
 import com.cong.springbootinit.model.vo.UserVO;
 
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
+import me.zhyd.oauth.model.AuthCallback;
 
 /**
  * 用户服务
@@ -114,4 +115,11 @@ public interface UserService extends IService<User> {
      */
     QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest);
 
+    /**
+     * 用户通过 GitHub 登录
+     *
+     * @param callback 回调
+     * @return {@link TokenLoginUserVo }
+     */
+    TokenLoginUserVo userLoginByGithub(AuthCallback callback);
 }
