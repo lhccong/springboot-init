@@ -8,8 +8,8 @@ import com.cong.springbootinit.model.dto.postthumb.PostThumbAddRequest;
 import com.cong.springbootinit.model.entity.User;
 import com.cong.springbootinit.service.PostThumbService;
 import com.cong.springbootinit.service.UserService;
+
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,13 +39,11 @@ public class PostThumbController {
      * 点赞 / 取消点赞
      *
      * @param postThumbAddRequest 发布拇指添加请求
-     * @param request             请求
      * @return resultNum 本次点赞变化数
      */
     @PostMapping("/")
     @ApiOperation(value = "点赞 / 取消点赞")
-    public BaseResponse<Integer> doThumb(@RequestBody PostThumbAddRequest postThumbAddRequest,
-            HttpServletRequest request) {
+    public BaseResponse<Integer> doThumb(@RequestBody PostThumbAddRequest postThumbAddRequest) {
         if (postThumbAddRequest == null || postThumbAddRequest.getPostId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }

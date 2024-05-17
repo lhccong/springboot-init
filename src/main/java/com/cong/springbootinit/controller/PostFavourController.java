@@ -17,7 +17,6 @@ import com.cong.springbootinit.service.PostService;
 import com.cong.springbootinit.service.UserService;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -50,13 +49,11 @@ public class PostFavourController {
      * 收藏 / 取消收藏
      *
      * @param postFavourAddRequest 发布收藏添加请求
-     * @param request              请求
      * @return resultNum 收藏变化数
      */
     @PostMapping("/")
     @ApiOperation(value = "收藏 / 取消收藏")
-    public BaseResponse<Integer> doPostFavour(@RequestBody PostFavourAddRequest postFavourAddRequest,
-                                              HttpServletRequest request) {
+    public BaseResponse<Integer> doPostFavour(@RequestBody PostFavourAddRequest postFavourAddRequest) {
         if (postFavourAddRequest == null || postFavourAddRequest.getPostId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }

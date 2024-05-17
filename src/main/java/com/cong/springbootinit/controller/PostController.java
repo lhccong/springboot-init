@@ -1,8 +1,8 @@
 package com.cong.springbootinit.controller;
 
+import cn.dev33.satoken.annotation.SaCheckRole;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.cong.springbootinit.annotation.AuthCheck;
 import com.cong.springbootinit.common.BaseResponse;
 import com.cong.springbootinit.common.DeleteRequest;
 import com.cong.springbootinit.common.ErrorCode;
@@ -19,9 +19,9 @@ import com.cong.springbootinit.model.entity.User;
 import com.cong.springbootinit.model.vo.PostVO;
 import com.cong.springbootinit.service.PostService;
 import com.cong.springbootinit.service.UserService;
+
 import java.util.List;
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -112,7 +112,7 @@ public class PostController {
      * @return {@link BaseResponse}<{@link Boolean}>
      */
     @PostMapping("/update")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @SaCheckRole(UserConstant.ADMIN_ROLE)
     @ApiOperation(value = "更新（仅管理员）")
     public BaseResponse<Boolean> updatePost(@RequestBody PostUpdateRequest postUpdateRequest) {
         if (postUpdateRequest == null || postUpdateRequest.getId() <= 0) {
@@ -137,7 +137,7 @@ public class PostController {
     /**
      * 根据 id 获取
      *
-     * @param id      编号
+     * @param id 编号
      * @return {@link BaseResponse}<{@link PostVO}>
      */
     @GetMapping("/get/vo")
@@ -160,7 +160,7 @@ public class PostController {
      * @return {@link BaseResponse}<{@link Page}<{@link Post}>>
      */
     @PostMapping("/list/page")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @SaCheckRole(UserConstant.ADMIN_ROLE)
     @ApiOperation(value = "分页获取列表（仅管理员）")
     public BaseResponse<Page<Post>> listPostByPage(@RequestBody PostQueryRequest postQueryRequest) {
         long current = postQueryRequest.getCurrent();

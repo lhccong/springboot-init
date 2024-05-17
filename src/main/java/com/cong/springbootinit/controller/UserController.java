@@ -1,7 +1,7 @@
 package com.cong.springbootinit.controller;
 
+import cn.dev33.satoken.annotation.SaCheckRole;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.cong.springbootinit.annotation.AuthCheck;
 import com.cong.springbootinit.common.BaseResponse;
 import com.cong.springbootinit.common.DeleteRequest;
 import com.cong.springbootinit.common.ErrorCode;
@@ -20,9 +20,10 @@ import com.cong.springbootinit.model.entity.User;
 import com.cong.springbootinit.model.vo.LoginUserVO;
 import com.cong.springbootinit.model.vo.UserVO;
 import com.cong.springbootinit.service.UserService;
+
 import java.util.List;
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -107,8 +108,7 @@ public class UserController {
      */
     @GetMapping("/login/wx_open")
     @ApiOperation(value = "用户登录（微信开放平台）")
-    public BaseResponse<LoginUserVO> userLoginByWxOpen(HttpServletRequest request,
-            @RequestParam("code") String code) {
+    public BaseResponse<LoginUserVO> userLoginByWxOpen(@RequestParam("code") String code) {
         WxOAuth2AccessToken accessToken;
         try {
             WxMpService wxService = wxOpenConfig.getWxMpService();
@@ -129,16 +129,13 @@ public class UserController {
     /**
      * 用户注销
      *
-     * @param request 请求
      * @return {@link BaseResponse}<{@link Boolean}>
      */
     @PostMapping("/logout")
     @ApiOperation(value = "用户注销")
-    public BaseResponse<Boolean> userLogout(HttpServletRequest request) {
-        if (request == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        boolean result = userService.userLogout(request);
+    public BaseResponse<Boolean> userLogout() {
+
+        boolean result = userService.userLogout();
         return ResultUtils.success(result);
     }
 
@@ -165,7 +162,7 @@ public class UserController {
      * @return {@link BaseResponse}<{@link Long}>
      */
     @PostMapping("/add")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @SaCheckRole(UserConstant.ADMIN_ROLE)
     @ApiOperation(value = "创建用户")
     public BaseResponse<Long> addUser(@RequestBody UserAddRequest userAddRequest) {
         if (userAddRequest == null) {
@@ -189,7 +186,7 @@ public class UserController {
      * @return {@link BaseResponse}<{@link Boolean}>
      */
     @PostMapping("/delete")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @SaCheckRole(UserConstant.ADMIN_ROLE)
     @ApiOperation(value = "删除用户")
     public BaseResponse<Boolean> deleteUser(@RequestBody DeleteRequest deleteRequest) {
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
@@ -206,7 +203,7 @@ public class UserController {
      * @return {@link BaseResponse}<{@link Boolean}>
      */
     @PostMapping("/update")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @SaCheckRole(UserConstant.ADMIN_ROLE)
     @ApiOperation(value = "更新用户")
     public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest) {
         if (userUpdateRequest == null || userUpdateRequest.getId() == null) {
@@ -226,7 +223,7 @@ public class UserController {
      * @return {@link BaseResponse}<{@link User}>
      */
     @GetMapping("/get")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @SaCheckRole(UserConstant.ADMIN_ROLE)
     @ApiOperation(value = "根据 id 获取用户（仅管理员）")
     public BaseResponse<User> getUserById(long id) {
         if (id <= 0) {
@@ -258,7 +255,7 @@ public class UserController {
      * @return {@link BaseResponse}<{@link Page}<{@link User}>>
      */
     @PostMapping("/list/page")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @SaCheckRole(UserConstant.ADMIN_ROLE)
     @ApiOperation(value = "分页获取用户列表（仅管理员）")
     public BaseResponse<Page<User>> listUserByPage(@RequestBody UserQueryRequest userQueryRequest) {
         long current = userQueryRequest.getCurrent();
@@ -298,13 +295,11 @@ public class UserController {
      * 更新个人信息
      *
      * @param userUpdateMyRequest 用户更新我请求
-     * @param request             请求
      * @return {@link BaseResponse}<{@link Boolean}>
      */
     @PostMapping("/update/my")
     @ApiOperation(value = "更新个人信息")
-    public BaseResponse<Boolean> updateMyUser(@RequestBody UserUpdateMyRequest userUpdateMyRequest,
-            HttpServletRequest request) {
+    public BaseResponse<Boolean> updateMyUser(@RequestBody UserUpdateMyRequest userUpdateMyRequest) {
         if (userUpdateMyRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }

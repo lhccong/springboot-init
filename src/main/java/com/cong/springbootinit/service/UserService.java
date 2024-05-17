@@ -6,8 +6,10 @@ import com.cong.springbootinit.model.dto.user.UserQueryRequest;
 import com.cong.springbootinit.model.entity.User;
 import com.cong.springbootinit.model.vo.LoginUserVO;
 import com.cong.springbootinit.model.vo.UserVO;
+
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 
 /**
@@ -76,10 +78,9 @@ public interface UserService extends IService<User> {
     /**
      * 用户注销
      *
-     * @param request 请求
      * @return boolean
      */
-    boolean userLogout(HttpServletRequest request);
+    boolean userLogout();
 
     /**
      * 获取脱敏的已登录用户信息
