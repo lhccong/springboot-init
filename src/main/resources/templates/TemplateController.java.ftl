@@ -62,7 +62,7 @@ public class ${upperDataKey}Controller {
         ${dataKey}Service.valid${upperDataKey}(${dataKey}, true);
         // todo 填充默认值
         User loginUser = userService.getLoginUser();
-        ${dataKey}.setId(loginUser.getId());
+        ${dataKey}.setUserId(loginUser.getId());
         // 写入数据库
         boolean result = ${dataKey}Service.save(${dataKey});
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
